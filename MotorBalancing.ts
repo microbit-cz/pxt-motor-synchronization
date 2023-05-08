@@ -3,18 +3,18 @@ class MotorBalancing {
     static readonly AVG_LENGTH = 10;
     static readonly SPEED_THRESHOLD = 20;
 
-    speedLeft: number;
-    speedRight: number;
-    holesLeft: number;
-    holesRight: number;
-    leftSum: number[];
-    rightSum: number[];
-    leftMotor: PCAmotor.Motors;
-    rightMotor: PCAmotor.Motors;
+    private speedLeft: number;
+    private speedRight: number;
+    private holesLeft: number;
+    private holesRight: number;
+    private leftSum: number[];
+    private rightSum: number[];
+    private leftMotor: PCAmotor.Motors;
+    private rightMotor: PCAmotor.Motors;
 
     constructor(leftMotor: PCAmotor.Motors, rightMotor: PCAmotor.Motors, leftSensor: DigitalPin, rightSensor: DigitalPin) {
-        this.leftMotor = leftMotor;
-        this.rightMotor = rightMotor;
+        this.leftMotor = Math.clamp(-255, 255, leftMotor);
+        this.rightMotor = Math.clamp(-255, 255, rightMotor);
         this.holesLeft = 0;
         this.holesRight = 0;
         this.leftSum = [];
