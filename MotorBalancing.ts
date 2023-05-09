@@ -13,8 +13,8 @@ class MotorBalancing {
     private rightMotor: PCAmotor.Motors;
 
     constructor(leftMotor: PCAmotor.Motors, rightMotor: PCAmotor.Motors, leftSensor: DigitalPin, rightSensor: DigitalPin) {
-        this.leftMotor = Math.clamp(-255, 255, leftMotor);
-        this.rightMotor = Math.clamp(-255, 255, rightMotor);
+        this.leftMotor = leftMotor;
+        this.rightMotor = rightMotor;
         this.holesLeft = 0;
         this.holesRight = 0;
         this.leftSum = [];
@@ -42,8 +42,8 @@ class MotorBalancing {
     }
 
     public setSpeed(leftSpeed: number, rightSpeed: number) {
-        this.speedLeft = leftSpeed;
-        this.speedRight = rightSpeed;
+        this.speedLeft = Math.clamp(-255, 255, leftSpeed);
+        this.speedRight = Math.clamp(-255, 255, rightSpeed);
         if (this.speedRight == 0) {
             loops.everyInterval(MotorBalancing.UPDATE_INTERVAL, () => {
                 console.logValue("speedLeft 111", this.speedLeft + " " + this.holesLeft);
