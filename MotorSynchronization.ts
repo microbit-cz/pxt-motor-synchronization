@@ -101,12 +101,12 @@ namespace motorsynchronization {
                 this.right_pulses++;
             });
 
-            loops.everyInterval(500, () => {
+            loops.everyInterval(300, () => {
                 this.left_ang_speed = this.left_angular_speed.calcAngularSpeed(this.left_pulses);
                 this.right_ang_speed = this.right_angular_speed.calcAngularSpeed(this.right_pulses);
             });
 
-            loops.everyInterval(50, () => {
+            loops.everyInterval(150, () => {
                 // Calculate angular speed
                 // const partAngular = this.ENCODER_HOLES * (control.millis() / 1000 - this.start_time);
                 // this.left_angular_speed = Math.roundWithPrecision((2 * Math.PI * this.left_pulses.le) / partAngular, 3);
@@ -131,44 +131,51 @@ namespace motorsynchronization {
                 //         this.right_real_speed += this.aggression;
                 //     }
                 // }
+                // if (this.left_ang_speed === 0 && this.left_ang_speed === 0) return;
 
-                const left_diff = this.left_ang_speed - this.SPEED_LEFT;
-                const right_diff = this.right_ang_speed - this.SPEED_RIGHT;
+                let left_diff = this.SPEED_LEFT - this.left_ang_speed;
+                let right_diff = this.SPEED_RIGHT - this.right_ang_speed;
 
                 console.logValue("left angular value", this.left_ang_speed);
                 console.logValue("right angular value", this.right_ang_speed);
 
-                if (left_diff > 1 && left_diff < -1) {
+                console.logValue("left diff", left_diff);
+                console.logValue("right diff", right_diff);
+
+                if ((left_diff > 2 || left_diff < -2) && this.left_ang_speed !== 0) {
                     if (this.left_ang_speed > this.SPEED_LEFT) {
                         if (this.left_negate) {
-                            this.left_real_speed--;
+                            this.left_real_speed+=this.aggression;
                         } else {
-                            this.left_real_speed++;
+                            this.left_real_speed -= this.aggression;
                         }
                     } else {
                         if (this.left_negate) {
-                            this.left_real_speed++;
+                            this.left_real_speed -= this.aggression;
                         } else {
-                            this.left_real_speed--;
+                            this.left_real_speed += this.aggression;
                         }
                     }
                 }
 
-                if (right_diff > 1 && right_diff < -1) {
+                if ((right_diff > 2 || right_diff < -2) && this.right_ang_speed !== 0) {
                     if (this.right_ang_speed > this.SPEED_RIGHT) {
                         if (this.right_negate) {
-                            this.right_real_speed--;
+                            this.right_real_speed+=this.aggression;
                         } else {
-                            this.right_real_speed++;
+                            this.right_real_speed-=this.aggression;
                         }
                     } else {
                         if (this.right_negate) {
-                            this.right_real_speed++;
+                            this.right_real_speed-=this.aggression;
                         } else {
-                            this.right_real_speed--;
+                            this.right_real_speed+=this.aggression;
                         }
                     }
                 }
+
+                console.logValue("left speed", this.left_real_speed);
+                console.logValue("right speed", this.right_real_speed);
 
                 PCAmotor.MotorRun(this.MOTOR_LEFT, this.left_real_speed);
                 PCAmotor.MotorRun(this.MOTOR_RIGHT, this.right_real_speed);
@@ -202,10 +209,12 @@ namespace motorsynchronization {
             this.start_time = control.millis() / 1000;
             this.SPEED_LEFT = Math.clamp(-255, 255, speed_left);
             this.SPEED_RIGHT = Math.clamp(-255, 255, speed_right);
-            this.left_real_speed = this.SPEED_LEFT;
-            this.right_real_speed = this.SPEED_RIGHT;
-            if (this.SPEED_LEFT < 0) this.left_negate = true;
-            if (this.SPEED_RIGHT < 0) this.right_negate = true;
+            this.left_real_speed = this.SPEED_LEFT*1.5;
+            this.right_real_speed = this.SPEED_RIGHT*1.5;
+            this.SPEED_LEFT = Math.abs(this.SPEED_LEFT);
+            this.SPEED_RIGHT = Math.abs(this.SPEED_RIGHT);
+            if (speed_left < 0) this.left_negate = true;
+            if (speed_right < 0) this.right_negate = true;
         }
     }
 
