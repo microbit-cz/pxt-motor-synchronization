@@ -59,7 +59,7 @@ namespace motorsynchronization {
             this.left_angular_speed = new AngularSpeedCalc(holes);
             this.right_angular_speed = new AngularSpeedCalc(holes);
 
-            this.aggression = 2;
+            this.aggression = 1;
 
             this.left_real_speed = 0;
             this.right_real_speed = 0;
