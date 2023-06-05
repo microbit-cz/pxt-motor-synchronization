@@ -1,32 +1,33 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/V-0A61vX)
+# Motor Synchronization
+[CZ](README_cz.md) | [EN](README.md)
 
-> Open this page at [https://petrmacha021.github.io/pxt-motorbalancing/](https://petrmacha021.github.io/pxt-motorbalancing/)
+This library is for synchronizing motors on micro:bit cars. The purpose of this library is to make sure that two motors are synchronized with each other.
+Furthermore, let the car rotate and spin with predictable speed.
 
-## Use as Extension
+The speed is represented as angular velocity since the motors are rotating. The angular velocity is measured in radians per second.
+The velocity is calculated from the number of impulses per second from the encoder.
 
-This repository can be added as an **extension** in MakeCode.
+The encoder has a specified number of holes, therefore the number of impulses per revolution is twice the amount of holes on the encoder.
+From this angular velocity can be calculated. Angular velocity is used for synchronization of the motors.
 
-* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **New Project**
-* click on **Extensions** under the gearwheel menu
-* search for **https://github.com/petrmacha021/pxt-motorbalancing** and import
+The library is using [a Motor library](https://github.com/tomaskazda/pxt-magicbit-pca9685), for changing the speed of motors, created for the magic:bit board.
 
-## Edit this project ![Build status badge](https://github.com/petrmacha021/pxt-motorbalancing/workflows/MakeCode/badge.svg)
+# Usage
+## Initialization
+The library is initialized by calling the create function. The create function takes the following parameters:
+- motor1: The first motor to synchronize
+- motor2: The second motor to synchronize
+- sensor1: The pin where the encoder for the first motor is connected
+- sensor2: The pin where the encoder for the second motor is connected
+- holes: The number of holes on the encoder
+```javascript
+let motors = motorsynchronization.create(PCAmotor.Motors.M1, PCAmotor.Motors.M2, DigitalPin.P1, DigitalPin.P2, 20);
+```
 
-To edit this repository in MakeCode.
-
-* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **Import** then click on **Import URL**
-* paste **https://github.com/petrmacha021/pxt-motorbalancing** and click import
-
-## Blocks preview
-
-This image shows the blocks code from the last commit in master.
-This image may take a few minutes to refresh.
-
-![A rendered view of the blocks](https://github.com/petrmacha021/pxt-motorbalancing/raw/master/.github/makecode/blocks.png)
-
-#### Metadata (used for search, rendering)
-
-* for PXT/microbit
-<script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
+## Synchronization
+The synchronization is done by calling the synchronize function. The synchronize function takes the following parameters:
+- speed1: The speed of the first motor in radians per second
+- speed2: The speed of the second motor in radians per second
+```javascript
+motors.Run(10, 10);
+```
