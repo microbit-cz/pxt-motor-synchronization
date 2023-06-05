@@ -48,7 +48,7 @@ namespace motorsynchronization {
             this.SPEED_LEFT = 0;
             this.SPEED_RIGHT = 0;
 
-            this.ENCODER_HOLES = holes;
+            this.ENCODER_HOLES = holes*2;
 
             this.left_negate = false;
             this.right_negate = false;
