@@ -101,6 +101,14 @@ namespace motorsynchronization {
                 this.right_pulses++;
             });
 
+            pins.onPulsed(this.SENSOR_LEFT, PulseValue.Low, () => {
+                this.left_pulses++;
+            });
+
+            pins.onPulsed(this.SENSOR_RIGHT, PulseValue.Low, () => {
+                this.right_pulses++;
+            });
+
             loops.everyInterval(300, () => {
                 this.left_ang_speed = this.left_angular_speed.calcAngularSpeed(this.left_pulses);
                 this.right_ang_speed = this.right_angular_speed.calcAngularSpeed(this.right_pulses);
