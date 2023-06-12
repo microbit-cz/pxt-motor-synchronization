@@ -3,13 +3,27 @@
 
 Tato knihovna slouží k synchronizaci motorů v micro:bitových autech. Účelem této knihovny je zajistit, aby dva motory byly vzájemně synchronizovány.
 
+<img src="images/motor.jpg" alt="encoder" style="width: 40%">
+
+
 Rychlost je reprezentována jako úhlová rychlost, protože motory se otáčejí. Úhlová rychlost se měří v radiánech za sekundu.
 Rychlost se vypočítá z počtu impulsů za sekundu ze snímače.
+
+<img src="images/encoder.jpg" alt="encoder" style="width: 40%">
 
 Snímač má určitý počet otvorů, proto je počet impulsů za otáčku dvojnásobkem počtu otvorů na snímači.
 Z toho lze vypočítat úhlovou rychlost. Úhlová rychlost se používá pro synchronizaci motorů.
 
 Knihovna používá [tuto knihovnu](https://github.com/tomaskazda/pxt-magicbit-pca9685), pro změnu rychlosti motorů, vytvořenou pro desku magic:bit.
+
+# Omezení
+
+## Rychlá reakční doba
+Protože tato knihovna zvyšuje režii, nedoporučuje se ji používat, pokud potřebujete rychlé reakční časy robota. 
+
+## Kompatibilita
+Tato knihovna **podporuje pouze** PCA9865 s magic:biy. Jakákoli jiná deska je podporována
+
 # Použití
 ## Inicializace
 Knihovna se inicializuje voláním funkce create. Funkce create přijímá následující parametry:

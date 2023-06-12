@@ -4,13 +4,25 @@
 This library is for synchronizing motors on micro:bit cars. The purpose of this library is to make sure that two motors are synchronized with each other.
 Furthermore, let the car rotate and spin with predictable speed.
 
+<img src="images/motor.jpg" alt="encoder" style="width: 40%">
+
 The speed is represented as angular velocity since the motors are rotating. The angular velocity is measured in radians per second.
 The velocity is calculated from the number of impulses per second from the encoder.
+
+<img src="images/encoder.jpg" alt="encoder" style="width: 40%">
 
 The encoder has a specified number of holes, therefore the number of impulses per revolution is twice the amount of holes on the encoder.
 From this angular velocity can be calculated. Angular velocity is used for synchronization of the motors.
 
 The library is using [a Motor library](https://github.com/tomaskazda/pxt-magicbit-pca9685), for changing the speed of motors, created for the magic:bit board.
+
+# Limitations
+
+## Fast Reaction times
+Since this library adds overhead, thus it's not recommended to use this library when needing fast reaction times from the robot. 
+
+## Compatibility
+This libray is **only** supporting the PCA9865 with magic:biy. Any other board is usupported
 
 # Usage
 ## Initialization
