@@ -144,11 +144,11 @@ namespace motorsynchronization {
                 let left_diff = this.SPEED_LEFT - this.left_ang_speed;
                 let right_diff = this.SPEED_RIGHT - this.right_ang_speed;
 
-                console.logValue("left angular value", this.left_ang_speed);
-                console.logValue("right angular value", this.right_ang_speed);
+                // console.logValue("left angular value", this.left_ang_speed);
+                // console.logValue("right angular value", this.right_ang_speed);
 
-                console.logValue("left diff", left_diff);
-                console.logValue("right diff", right_diff);
+                // console.logValue("left diff", left_diff);
+                // console.logValue("right diff", right_diff);
 
                 if ((left_diff > 2 || left_diff < -2) && this.left_ang_speed !== 0) {
                     if (this.left_ang_speed > this.SPEED_LEFT) {
@@ -182,8 +182,8 @@ namespace motorsynchronization {
                     }
                 }
 
-                console.logValue("left speed", this.left_real_speed);
-                console.logValue("right speed", this.right_real_speed);
+                // console.logValue("left speed", this.left_real_speed);
+                // console.logValue("right speed", this.right_real_speed);
 
                 PCAmotor.MotorRun(this.MOTOR_LEFT, this.left_real_speed);
                 PCAmotor.MotorRun(this.MOTOR_RIGHT, this.right_real_speed);
