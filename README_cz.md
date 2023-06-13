@@ -43,3 +43,10 @@ Synchronizace se provádí voláním funkce synchronize. Funkce synchronize při
 ```javascript
 motors.Run(10, 10);
 ```
+
+# Řešení problémů
+## Robot se začne neočekávaně otáčet
+Zkontrolujte snímače, protože se mohly odpojit nebo vypadnout z místa. Pokud se tak stalo, opravte je a zkuste to znovu.
+
+## Robot se nezačne pohybovat
+Zkontrolujte připojení motoru, jestli je připojen. Pokud ano, změňte rychlost ve funkci `Run()`.
