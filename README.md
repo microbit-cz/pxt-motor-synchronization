@@ -22,7 +22,7 @@ The library is using [a Motor library](https://github.com/tomaskazda/pxt-magicbi
 Since this library adds overhead, thus it's not recommended to use this library when needing fast reaction times from the robot. 
 
 ## Compatibility
-This libray is **only** supporting the PCA9865 with magic:biy. Any other board is usupported
+This library is **only** supporting the PCA9865 with magic:biy. Any other board is usupported.
 
 # Usage
 ## Initialization
@@ -43,3 +43,10 @@ The synchronization is done by calling the synchronize function. The synchronize
 ```javascript
 motors.Run(10, 10);
 ```
+
+# Troubleshooting
+## Robot starts turning unexpectedly
+Check the sensors as they may have disconnected or have fell out of their place. If they did correct them and try again.
+
+## Robot does not start moving
+Check motor connections, if they are connected. If they are, change the speed of in `Run()` function.
