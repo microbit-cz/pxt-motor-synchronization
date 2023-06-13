@@ -1,5 +1,5 @@
 # Motor Synchronization
-[CZ](README_cz.md) | [EN](README.md)
+[CZ](README_cs.md) | [EN](README.md)
 
 This library is for synchronizing motors on micro:bit cars. The purpose of this library is to make sure that two motors are synchronized with each other.
 Furthermore, let the car rotate and spin with predictable speed.
@@ -14,7 +14,7 @@ The velocity is calculated from the number of impulses per second from the encod
 The encoder has a specified number of holes, therefore the number of impulses per revolution is twice the amount of holes on the encoder.
 From this angular velocity can be calculated. Angular velocity is used for synchronization of the motors.
 
-The library is using [a Motor library](https://github.com/tomaskazda/pxt-magicbit-pca9685), for changing the speed of motors, created for the magic:bit board.
+The library is using [this PCA9685 library](https://github.com/tomaskazda/pxt-magicbit-pca9685), for changing the speed of motors, created for the magic:bit board.
 
 # Limitations
 
@@ -22,7 +22,7 @@ The library is using [a Motor library](https://github.com/tomaskazda/pxt-magicbi
 Since this library adds overhead, thus it's not recommended to use this library when needing fast reaction times from the robot. 
 
 ## Compatibility
-This library is **only** supporting the PCA9865 with magic:biy. Any other board is usupported.
+This library is **only** supporting the PCA9685 with magic:bit. Any other board is unsupported.
 
 # Usage
 ## Initialization
@@ -38,8 +38,8 @@ let motors = motorsynchronization.create(PCAmotor.Motors.M1, PCAmotor.Motors.M2,
 
 ## Synchronization
 The synchronization is done by calling the synchronize function. The synchronize function takes the following parameters:
-- speed1: The speed of the first motor in radians per second
-- speed2: The speed of the second motor in radians per second
+- speed1: The speed of the first motor (radians per second)
+- speed2: The speed of the second motor (radians per second)
 ```javascript
 motors.Run(10, 10);
 ```
