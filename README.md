@@ -1,15 +1,11 @@
 # Motor Synchronization
 [CZ](README_cs.md) | [EN](README.md)
 
-This library is for synchronizing motors on micro:bit cars. The purpose of this library is to make sure that two motors are synchronized with each other.
-Furthermore, let the car rotate and spin with predictable speed.
+This library is for synchronising motors on micro:bit cars with the magic:bit board and PCA9685. The aim is to make it easier to go straight or turn predictably with micro:bit cars.
 
-<img src="images/motor.jpg" alt="encoder" style="width: 40%">
+This code relies on the detection of holes in an encoder connected to each motor. From these detections and the number of holes there are, angular velocity can be calculated.
 
-The speed is represented as angular velocity since the motors are rotating. The angular velocity is measured in radians per second.
-The velocity is calculated from the number of impulses per second from the encoder.
-
-<img src="images/encoder.jpg" alt="encoder" style="width: 40%">
+<img src="images/encoder.jpg" alt="encoder" style="width: 20%">
 
 The encoder has a specified number of holes, therefore the number of impulses per revolution is twice the amount of holes on the encoder.
 From this angular velocity can be calculated. Angular velocity is used for synchronization of the motors.
