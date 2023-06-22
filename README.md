@@ -25,7 +25,7 @@ let motors = motorsynchronization.create(
 motors.Calibrate();
 ```
 
-The Calibrate method prints out into the console the maximum speed for your motors. You have to set this as your max speed.
+The Calibrate method prints out into the console the maximum speed for your motors. You have to set this as your max speed, so that the method Run can be called.
 
 ```typescript
 let motors = motorsynchronization.create(
@@ -41,7 +41,7 @@ motors.SetMaxSpeed(19);
 motors.Run(200, 200);
 ```
 
-In this example, I am setting the max speed to 19 rad/s. After initializing you can set debugging with SetDebug set to true.
+In this example, I am setting the max speed to 19 rad/s. After initializing you can enable debugging with SetDebug set to true.
 
 ## Advanced
 

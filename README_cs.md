@@ -1,5 +1,5 @@
 # Motor Synchronization
-[CZ](README_cz.md) | [EN](README.md)
+[EN](README.md) | [CZ](README_cs.md)
 
 Tato knihovna slouží k synchronizaci motorů v micro:bitových autech. Účelem této knihovny je zajistit, aby dva motory byly vzájemně synchronizovány.
 
@@ -15,6 +15,53 @@ Snímač má určitý počet otvorů, proto je počet impulsů za otáčku dvojn
 Z toho lze vypočítat úhlovou rychlost. Úhlová rychlost se používá pro synchronizaci motorů.
 
 Knihovna používá [tuto knihovnu](https://github.com/tomaskazda/pxt-magicbit-pca9685), pro změnu rychlosti motorů, vytvořenou pro desku magic:bit.
+
+# Začínáme
+Chcete-li začít používat tuto knihovnu, musíte ji nejprve zkalibrovat pomocí motorů. Toto je potřeba provést vždy po výměně motorů.
+```typescript
+let motors = motorsynchronization.create(
+    PCAmotor.Motors.M2, // Levý motor
+    PCAmotor.Motors.M3, // Pravý motor
+    DigitalPin.P12, // Senzor pro levý motor
+    DigitalPin.P8, // Senzor pro pravý motor
+    20 // Počet otvorů v enkodéru
+);
+motors.Calibrate();
+```
+
+Metoda Calibrate vypíše do konzole maximální rychlost motorů. Tato hodnota se musí nastavit jako maximální rychlost pro fungování metody Run.
+
+```typescript
+let motors = motorsynchronization.create(
+    PCAmotor.Motors.M2, // Levý motor
+    PCAmotor.Motors.M3, // Pravý motor
+    DigitalPin.P12, // Senzor pro levý motor
+    DigitalPin.P8, // Senzor pro pravý motor
+    20 // Počet otvorů v enkodéru
+);
+//motors.SetDebug(true);
+//motors.Calibrate();
+motors.SetMaxSpeed(19);
+motors.Run(200, 200);
+```
+
+V tomto příkladu se nastavuje maximální rychlost na 19 rad/s. Po inicializaci můžete zapnout ladění pomocí SetDebug nastaveného na true.
+
+## Pokročilé
+
+Úhlovou rychlost můžete také nastavit okamžitě bez nutnosti kalibrace.
+
+```typescript
+let motors = motorsynchronization.create(
+    PCAmotor.Motors.M2, // Levý motor
+    PCAmotor.Motors.M3, // Pravý motor
+    DigitalPin.P12, // Senzor pro levý motor
+    DigitalPin.P8, // Senzor pro pravý motor
+    20 // Počet otvorů v enkodéru
+);
+//motors.SetDebug(true);
+motors.RunAngular(10, 10);
+```
 
 # Omezení
 
