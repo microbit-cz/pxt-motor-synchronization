@@ -1,5 +1,5 @@
 # Motor Synchronization
-[CZ](README_cs.md) | [EN](README.md)
+[EN](README.md) | [CZ](README_cs.md)
 
 This library is for synchronising motors on micro:bit cars with the magic:bit board and PCA9685. The aim is to make it easier to go straight or turn predictably with micro:bit cars.
 
@@ -11,6 +11,53 @@ The encoder has a specified number of holes, therefore the number of impulses pe
 From this angular velocity can be calculated. Angular velocity is used for synchronization of the motors.
 
 The library is using [this PCA9685 library](https://github.com/tomaskazda/pxt-magicbit-pca9685), for changing the speed of motors, created for the magic:bit board.
+
+# Getting Started
+To start using this library, you have to first calibrate it with the motors. This has to be done every time after changing the motors.
+```typescript
+let motors = motorsynchronization.create(
+    PCAmotor.Motors.M2,   // Left motor
+    PCAmotor.Motors.M3,   // Right motor
+    DigitalPin.P12,       // Sensor for left motor
+    DigitalPin.P8,        // Sensor for right motor
+    20                    // Number of holes in the encoder
+);
+motors.Calibrate();
+```
+
+The Calibrate method prints out into the console the maximum speed for your motors. You have to set this as your max speed.
+
+```typescript
+let motors = motorsynchronization.create(
+    PCAmotor.Motors.M2,  // Left motor
+    PCAmotor.Motors.M3,  // Right motor
+    DigitalPin.P12,       // Sensor for left motor
+    DigitalPin.P8,       // Sensor for right motor
+    20                   // Number of holes in the encoder
+);
+//motors.SetDebug(true);
+//motors.Calibrate();
+motors.SetMaxSpeed(19);
+motors.Run(200, 200);
+```
+
+In this example, I am setting the max speed to 19 rad/s. After initializing you can set debugging with SetDebug set to true.
+
+## Advanced
+
+You can also immediately set angular speed without the need for calibrating.
+
+```typescript
+let motors = motorsynchronization.create(
+    PCAmotor.Motors.M2,  // Left motor
+    PCAmotor.Motors.M3,  // Right motor
+    DigitalPin.P12,       // Sensor for left motor
+    DigitalPin.P8,       // Sensor for right motor
+    20                   // Number of holes in the encoder
+);
+//motors.SetDebug(true);
+motors.RunAngular(10, 10);
+```
 
 # Limitations
 
