@@ -25,7 +25,7 @@ let motors = motorsynchronization.create(
 motors.Calibrate();
 ```
 
-The Calibrate method prints out into the console the maximum speed for your motors. You have to set this as your max speed, so that the method Run can be called.
+The Calibrate method prints out into the console the maximum speed for your motors. You have to set this as your max speed, so that the method Run can be called. Speeds for the Run method can be anywhere between the values 255 and -255.
 
 ```typescript
 let motors = motorsynchronization.create(

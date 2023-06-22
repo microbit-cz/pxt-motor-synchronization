@@ -29,7 +29,7 @@ let motors = motorsynchronization.create(
 motors.Calibrate();
 ```
 
-Metoda Calibrate vypíše do konzole maximální rychlost motorů. Tato hodnota se musí nastavit jako maximální rychlost pro fungování metody Run.
+Metoda Calibrate vypíše do konzole maximální rychlost motorů. Tato hodnota se musí nastavit jako maximální rychlost pro fungování metody Run. Rychlosti pro metodu Run mohou být kdekoli mezi hodnotami 255 a -255.
 
 ```typescript
 let motors = motorsynchronization.create(
