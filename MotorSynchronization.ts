@@ -1,4 +1,3 @@
-
 /**
  * Library for synchronizing motors
  */
@@ -30,13 +29,15 @@ namespace motorsynchronization {
 
         private aggression: number;
 
-        private left_ratio: number;
-        private right_ratio: number;
-
         private start_time: number;
 
         private left_ang_speed: number;
         private right_ang_speed: number;
+
+        private run: boolean;
+        private debug: boolean;
+
+        private max_speed: number;
 
         constructor(left_motor: PCAmotor.Motors, right_motor: PCAmotor.Motors, left_sensor: DigitalPin, right_sensor: DigitalPin, holes: number, debug: boolean = false) {
             this.MOTOR_LEFT = left_motor;
@@ -64,6 +65,10 @@ namespace motorsynchronization {
             this.left_real_speed = 0;
             this.right_real_speed = 0;
 
+            this.run = false;
+
+            this.debug = false;
+
             let factor: number;
             let higherValue: number;
 
@@ -74,24 +79,6 @@ namespace motorsynchronization {
                 factor = 1 / this.SPEED_RIGHT;
                 higherValue = this.SPEED_RIGHT;
             }
-
-            this.left_ratio = higherValue * factor;
-            this.right_ratio = this.SPEED_LEFT * factor;
-
-            // if (debug) {
-            //     console.log(`LEFT RATIO: ${this.left_ratio}`);
-            //     console.log(`RIGHT RATIO: ${this.right_ratio}`);
-            //     loops.everyInterval(50, () => {
-            //         console.logValue("LEFT ENCODER SPEED", this.left_pulses);
-            //         console.logValue("RIGHT ENCODER SPEED", this.right_pulses);
-
-            //         console.logValue("REAL LEFT SPEED", this.left_real_speed);
-            //         console.logValue("REAL RIGHT SPEED", this.right_real_speed);
-
-            //         console.logValue("LEFT ANGULAR SPEED", this.left_angular_speed);
-            //         console.logValue("RIGHT ANGULAR SPEED", this.right_angular_speed);
-            //     });
-            // }
 
             pins.onPulsed(this.SENSOR_LEFT, PulseValue.High, () => {
                 this.left_pulses++;
@@ -115,40 +102,10 @@ namespace motorsynchronization {
             });
 
             loops.everyInterval(150, () => {
-                // Calculate angular speed
-                // const partAngular = this.ENCODER_HOLES * (control.millis() / 1000 - this.start_time);
-                // this.left_angular_speed = Math.roundWithPrecision((2 * Math.PI * this.left_pulses.le) / partAngular, 3);
-                // this.right_angular_speed = Math.roundWithPrecision((2 * Math.PI * this.right_pulses) / partAngular, 3);
-
-                // const left_diff = this.left_angular_speed - this.SPEED_LEFT;
-                // const right_diff = this.right_angular_speed - this.SPEED_RIGHT;
-
-                // if (left_diff > 0.5 || left_diff < 0.5) {
-                //     if (left_diff > 0) {
-                //         if (this.left_negate) this.left_real_speed += this.aggression;
-                //         else this.left_real_speed -= this.aggression;
-                //     } else {
-                //         this.left_real_speed += this.aggression;
-                //     }
-                // }
-
-                // if (right_diff > 0.5 || right_diff < 0.5) {
-                //     if (right_diff > 0) {
-                //         this.right_real_speed -= this.aggression;
-                //     } else {
-                //         this.right_real_speed += this.aggression;
-                //     }
-                // }
-                // if (this.left_ang_speed === 0 && this.left_ang_speed === 0) return;
+                if (!this.run) return;
 
                 let left_diff = this.SPEED_LEFT - this.left_ang_speed;
                 let right_diff = this.SPEED_RIGHT - this.right_ang_speed;
-
-                // console.logValue("left angular value", this.left_ang_speed);
-                // console.logValue("right angular value", this.right_ang_speed);
-
-                // console.logValue("left diff", left_diff);
-                // console.logValue("right diff", right_diff);
 
                 if ((left_diff > 2 || left_diff < -2) && this.left_ang_speed !== 0) {
                     if (this.left_ang_speed > this.SPEED_LEFT) {
@@ -182,12 +139,46 @@ namespace motorsynchronization {
                     }
                 }
 
-                // console.logValue("left speed", this.left_real_speed);
-                // console.logValue("right speed", this.right_real_speed);
-
                 PCAmotor.MotorRun(this.MOTOR_LEFT, this.left_real_speed);
                 PCAmotor.MotorRun(this.MOTOR_RIGHT, this.right_real_speed);
+
+                if (this.debug) {
+                    console.logValue("left angular value", this.left_ang_speed);
+                    console.logValue("right angular value", this.right_ang_speed);
+
+                    console.logValue("left diff", left_diff);
+                    console.logValue("right diff", right_diff);
+
+                    console.logValue("left speed", this.left_real_speed);
+                    console.logValue("right speed", this.right_real_speed);
+                }
             });
+        }
+
+        /**
+         * Calibrate motors and print out the max speed
+         */
+        //% blockId="motorsynchronization_calibrate" block="%motorsynchronization|calibrate motors"
+        //% motorsynchronization.defl=motorsynchronization
+        //% blockGap=4
+        //% weight=80
+        //% parts="motorsynchronization"
+        public Calibrate() {
+            this.run = false;
+            console.log("Wait 10 seconds");
+            PCAmotor.MotorRun(this.MOTOR_LEFT, 255);
+            PCAmotor.MotorRun(this.MOTOR_RIGHT, 255);
+
+            const max_speed = Math.floor(Math.min(this.left_angular_speed.calcAngularSpeed(this.left_pulses), this.right_angular_speed.calcAngularSpeed(this.right_pulses)));
+            console.log(`Max speed for your motors is ${max_speed} rad/s`);
+
+            this.left_pulses = 0;
+            this.right_pulses = 0;
+
+            PCAmotor.MotorStop(this.MOTOR_LEFT);
+            PCAmotor.MotorStop(this.MOTOR_RIGHT);
+
+            this.SetMaxSpeed(max_speed);
         }
 
         /**
@@ -201,6 +192,55 @@ namespace motorsynchronization {
         //% parts="motorsynchronization" advanced=true
         public Settings(aggression: number) {
             this.aggression = aggression;
+            if (this.debug) console.log(`Set 'aggression' to ${aggression}`);
+        }
+
+        /**
+         * Set the max speed of the motors
+         * @param speed
+         */
+        //% blockId="motorsynchronization_maxSpeed" block="%motorsynchronization|set max speed to %speed|rad/s"
+        //% motorsynchronization.defl=motorsynchronization
+        //% blockGap=6
+        //% weight=70
+        //% parts="motorsynchronization"
+        public SetMaxSpeed(speed: number) {
+            this.max_speed = speed;
+            if (this.debug) console.log(`Set 'max_speed' to ${speed}`);
+        }
+
+        /**
+         * Turn on printing debugging values
+         * @param value
+         */
+        //% blockId="motorsynchronization_debug" block="%motorsynchronization|should print debug values %value|"
+        //% motorsynchronization.defl=motorsynchronization
+        //% blockGap=6
+        //% weight=60
+        //% parts="motorsynchronization" advanced=true
+        public SetDebug(value: boolean) {
+            this.debug = value;
+            if (this.debug) console.log("Enabled debugging");
+            else console.log("Disabled debugging");
+        }
+
+        /**
+         * Run motors at specified value
+         * From 255 to -255
+         * @param speed_left Left speed
+         * @param speed_right Right speed
+         */
+        //% blockId="motorsynchronization_run" block="%motorsynchronization|should print debug values %value|"
+        //% motorsynchronization.defl=motorsynchronization
+        //% blockGap=6
+        //% weight=30
+        //% parts="motorsynchronization advanced=true
+        public Run(speed_left: number, speed_right: number) {
+            if (this.max_speed === 0 || !this.max_speed) console.error("No max speed set!");
+            const left = this.max_speed * (Math.min(Math.max(speed_left, -255), 255) / 255);
+            const right = this.max_speed * (Math.min(Math.max(speed_right, -255), 255) / 255);
+            if (this.debug) console.log(`Left angular speed is ${left} rad/s and right angular speed is ${right} rad/s`);
+            this.RunAngular(left, right);
         }
 
         /**
@@ -208,21 +248,30 @@ namespace motorsynchronization {
          * @param speed_left Angular velocity for the left motor
          * @param speed_right Angular velocity for the right motor
          */
-        //% blockId="motorsynchronization_run" block="%motorsynchronization|run left motor at %speed_left|rad/s and right motor at %speed_right|rad/s"
+        //% blockId="motorsynchronization_runAngular" block="%motorsynchronization|run left motor at %speed_left|rad/s and right motor at %speed_right|rad/s"
         //% motorsynchronization.defl=motorsynchronization
         //% blockGap=6
         //% weight=90
         //% parts="motorsynchronization"
-        public Run(speed_left: number, speed_right: number) {
+        public RunAngular(speed_left: number, speed_right: number) {
+            this.run = true;
             this.start_time = control.millis() / 1000;
-            this.SPEED_LEFT = Math.clamp(-255, 255, speed_left);
-            this.SPEED_RIGHT = Math.clamp(-255, 255, speed_right);
-            this.left_real_speed = this.SPEED_LEFT*1.5;
-            this.right_real_speed = this.SPEED_RIGHT*1.5;
+            this.SPEED_LEFT = speed_left;
+            this.SPEED_RIGHT = speed_right;
+            this.left_real_speed = 200;
+            this.right_real_speed = 200;
             this.SPEED_LEFT = Math.abs(this.SPEED_LEFT);
             this.SPEED_RIGHT = Math.abs(this.SPEED_RIGHT);
             if (speed_left < 0) this.left_negate = true;
             if (speed_right < 0) this.right_negate = true;
+
+            if (this.debug) {
+                console.log(`Variable 'start_time' is ${this.start_time}`);
+                console.log(`Constant 'SPEED_LEFT' is ${this.SPEED_LEFT}`);
+                console.log(`Constant 'SPEED_RIGHT' is ${this.SPEED_RIGHT}`);
+                if (this.left_negate) console.log("Left speed is negated");
+                if (this.right_negate) console.log("Right speed is negated");
+            }
         }
     }
 
