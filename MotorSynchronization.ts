@@ -225,6 +225,22 @@ namespace motorsynchronization {
         }
 
         /**
+         * Stops the motors
+         */
+        //% blockId="motorsynchronization_run" block="%motorsynchronization|stops the motors"
+        //% motorsynchronization.defl=motorsynchronization
+        //% blockGap=6
+        //% weight=30
+        //% parts="motorsynchronization
+        public Stop() {
+            this.run = false;
+            this.SPEED_LEFT = 0;
+            this.SPEED_RIGHT = 0;
+            PCAmotor.MotorStop(this.MOTOR_LEFT);
+            PCAmotor.MotorStop(this.MOTOR_RIGHT);
+        }
+
+        /**
          * Run motors at specified value
          * From 255 to -255
          * @param speed_left Left speed
@@ -234,7 +250,7 @@ namespace motorsynchronization {
         //% motorsynchronization.defl=motorsynchronization
         //% blockGap=6
         //% weight=30
-        //% parts="motorsynchronization advanced=true
+        //% parts="motorsynchronization
         public Run(speed_left: number, speed_right: number) {
             if (this.max_speed === 0 || !this.max_speed) console.error("No max speed set!");
             const left = this.max_speed * (Math.min(Math.max(speed_left, -255), 255) / 255);
@@ -252,7 +268,7 @@ namespace motorsynchronization {
         //% motorsynchronization.defl=motorsynchronization
         //% blockGap=6
         //% weight=90
-        //% parts="motorsynchronization"
+        //% parts="motorsynchronization" advanced=true
         public RunAngular(speed_left: number, speed_right: number) {
             this.run = true;
             this.start_time = control.millis() / 1000;
