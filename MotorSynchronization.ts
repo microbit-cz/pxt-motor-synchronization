@@ -168,6 +168,7 @@ namespace motorsynchronization {
             console.log("Wait 10 seconds");
             PCAmotor.MotorRun(this.MOTOR_LEFT, 255);
             PCAmotor.MotorRun(this.MOTOR_RIGHT, 255);
+            basic.pause(10000);
 
             const max_speed = Math.floor(Math.min(this.left_angular_speed.calcAngularSpeed(this.left_pulses), this.right_angular_speed.calcAngularSpeed(this.right_pulses)));
             console.log(`Max speed for your motors is ${max_speed} rad/s`);
